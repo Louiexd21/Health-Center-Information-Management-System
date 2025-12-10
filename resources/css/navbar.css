@@ -1,0 +1,39 @@
+nav ul {
+    margin-bottom: 0 !important;
+}
+
+nav ul li a, .logo-title{
+    list-style: none;
+    text-decoration: none;
+    color: var(--main--color);
+    font-weight: 600;
+}
+nav ul li a{
+    font-size: clamp(.5rem, 3vw,1.2rem) !important;
+}
+nav ul li a:hover{
+    color: var(--secondary--color);
+}
+
+nav ul li a::after{
+    content: '';
+    width: 0;
+    height: 4px;
+    background-color: var(--secondary--color);
+    margin: auto;
+    display: block;
+    border-radius: 50px;
+}
+nav ul li a:hover::after{
+    width: 100%;
+    transition: width 0.3s linear;
+}
+
+.login-text{
+    background-color: var(--secondary--color);
+}
+
+.login-text:hover{
+    background-color: var(--main--color);
+
+}

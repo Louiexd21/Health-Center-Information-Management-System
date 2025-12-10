@@ -1,35 +1,42 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
-  <div class="container-fluid d-flex align-items-center justify-content-between flex-wrap">
 
-    <!-- Left: Toggler + Brand -->
-    <div class="d-flex align-items-center flex-shrink-1">
-      <button class="navbar-toggler custom-toggler me-3" 
-          type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-        <span class="toggler-line"></span>
-        <span class="toggler-line"></span>
-        <span class="toggler-line"></span>
-      </button>
-
-      <a class="navbar-brand d-flex gap-2 align-items-center h-100" href="#">
-        <img src="{{ asset('images/hugo_perez_logo.png') }}" alt="Logo" style="height: 40px;">
-        <h3 class="mb-0 fs-5 d-none d-md-block">Health Center Information Management</h3>
-      </a>
+<nav class="p-2 p-md-0 bg-neutral-primary sticky w-full z-20 top-0 border-b border-default ">
+  <div class="px-2 px-lg-3 lg:px-5 w-full flex flex-wrap items-center justify-between">
+    <a href="{{ route('homepage') }}#home" class="flex items-center space-x-3 rtl:space-x-reverse order-1 md:order-1 text-decoration-none">
+        <img src="{{ asset('images/hugo_perez_logo.png') }}" class="h-13" alt="HugoPerez Logo" />
+        <span class="logo-title self-center text-xl text-heading font-semibold whitespace-nowrap lg:block hidden ">Health Center IMS</span>
+    </a>
+    <div class="order-2 flex flex-wrap">
+      <div class=" flex items-center order-3">
+          <button data-collapse-toggle="navbar-default" type="button" class=" order-2 inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-body rounded-base md:hidden hover:bg-neutral-secondary-soft hover:text-heading focus:outline-none focus:ring-2 focus:ring-neutral-tertiary" aria-controls="navbar-default" aria-expanded="false">
+              <span class="sr-only">Open main menu</span>
+              <i class="fa-solid fa-bars text-3xl mx-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"></i>
+          </button>
+          <a href="{{ route('login') }}" class="login-text text-white font-[Poppins] duration-500 px-6 py-2 mx-4  rounded order-1 text-decoration-none">Login</a>
+      </div>
+      <divid="navbar-default"
+     class="transition-all duration-500 ease-in-out overflow-hidden
+            max-h-0 md:max-h-none hidden md:block w-full md:w-auto flex md:flex-row order-2 align-center">
+        <ul class="font-medium flex flex-wrap flex-col md:p-0 p-3  bg-neutral-secondary-soft md:flex-row  rtl:space-x-reverse  md:border-0 md:bg-neutral-primary">
+          <li>
+            <a href="{{ route('homepage') }}#home" class="fs-5 block py-2 px-2 px-lg-3 bg-brand rounded md:bg-transparent md:text-fg-brand md:p-0" aria-current="page">Home</a>
+          </li>
+          <li>
+            <a href="{{ route('homepage') }}#about" class="fs-5 block py-2 px-2 px-lg-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 md:dark:hover:bg-transparent">About</a>
+          </li>
+          <li>
+            <a href="{{ route('homepage') }}#services" class="fs-5 block py-2 px-2 px-lg-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 md:dark:hover:bg-transparent">Services</a>
+          </li>
+          <li>
+            <a href="{{ route('homepage') }}#specialist" class="fs-5 block py-2 px-2 px-lg-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 md:dark:hover:bg-transparent">Specialist</a>
+          </li>
+          <li>
+            <a href="{{ route('homepage') }}#faq" class="fs-5 block py-2 px-2 px-lg-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 md:dark:hover:bg-transparent">FAQs</a>
+          </li>
+          <li>
+            <a href="{{ route('homepage') }}#events" class="fs-5 block py-2 px-2 px-lg-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 md:dark:hover:bg-transparent">Events</a>
+          </li>
+        </ul>
+      </div>
     </div>
-        <!-- Right: Login -->
-    <div class="mx-3 mx-lg-5 d-flex flex-shrink-0  order-lg-3">
-      <a class="btn btn-success fw-normal ms-lg-3" href="{{ route('login') }}">Login</a>
-    </div>
-    <!-- Center: Nav links -->
-    <div class="collapse navbar-collapse" id="navbarContent">
-      <ul class="navbar-nav ms-auto gap-1">
-        <li class="nav-item"><a class="nav-link fw-bold fs-5 text-center" href="{{ route('homepage') }}#home">Home</a></li>
-        <li class="nav-item"><a class="nav-link fw-bold fs-5 text-center" href="{{ route('homepage') }}#about">About</a></li>
-        <li class="nav-item"><a class="nav-link fw-bold fs-5 text-center" href="{{ route('homepage') }}#services">Services</a></li>
-        <li class="nav-item"><a class="nav-link fw-bold fs-5 text-center" href="{{ route('homepage') }}#specialist">Specialist</a></li>
-        <li class="nav-item"><a class="nav-link fw-bold fs-5 text-center" href="{{ route('homepage') }}#faq">FAQ</a></li>
-        <li class="nav-item"><a class="nav-link fw-bold fs-5 text-center" href="{{ route('homepage') }}#events">Events</a></li>
-      </ul>
-    </div>
-
   </div>
 </nav>
