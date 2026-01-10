@@ -122,7 +122,7 @@
                 <table class="table table-hover" id="medicineTable">
                     <thead class="table-header">
                         <tr>
-                            <th class="text-center" scope="col"><button wire:click="sortBy('medicine_id')" class="sort-btn">No. {!! sortIcon($sortField, 'medicine_id', $sortDirection) !!}</button></th>
+                            <!-- <th class="text-center" scope="col"><button wire:click="sortBy('medicine_id')" class="sort-btn">No. {!! sortIcon($sortField, 'medicine_id', $sortDirection) !!}</button></th> -->
                             <th class="text-center" scope="col"><button wire:click="sortBy('medicine_name')">Medicine Name {!! sortIcon($sortField, 'medicine_name', $sortDirection) !!}</button></th>
                             <th class="text-center" scope="col"><button wire:click="sortBy('category_name')">Category {!! sortIcon($sortField, 'category_name', $sortDirection) !!}</button></th>
                             <th class="text-center" scope="col"><button wire:click="sortBy('dosage')">Dosage {!! sortIcon($sortField, 'dosage', $sortDirection) !!}</button></th>
@@ -138,7 +138,7 @@
                     <tbody>
                         @forelse($medicines as $medicine)
                         <tr>
-                            <td>{{ $medicine->medicine_id }}</td>
+                            <!-- <td>{{ $medicine->medicine_id }}</td> -->
                             <td>{{ $medicine->medicine_name }}</td>
                             <td>{{ $medicine->category->category_name }}</td>
                             <td>{{ $medicine->dosage }}</td>

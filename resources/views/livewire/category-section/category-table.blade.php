@@ -49,7 +49,7 @@
                     @endphp
                     <thead class="table-header">
                         <tr>
-                            <th scope="col" class="text-center" wire:click="sortBy('category_id')"><button class="text-nowrap">No. {!! sortIcon($sortField, 'category_id', $sortDirection) !!} </button></th>
+                            <!-- <th scope="col" class="text-center" wire:click="sortBy('category_id')"><button class="text-nowrap">No. {!! sortIcon($sortField, 'category_id', $sortDirection) !!} </button></th> -->
                             <th scope="col" class="text-center" wire:click="sortBy('category_name')"><button class="text-nowrap">Category Name {!! sortIcon($sortField, 'category_name', $sortDirection) !!}</button></th>
                             <th scope="col" class="text-center">Actions</th>
                         </tr>
@@ -57,7 +57,7 @@
                     <tbody class="text-center">
                     @foreach($categories as $category)
                         <tr>
-                            <td>{{ $category->category_id  }}</td>
+                            <!-- <td>{{ $category->category_id  }}</td> -->
                             <td>{{ $category->category_name }}</td>
                             <td>
                                 <div class="d-flex gap-1 justify-content-center">

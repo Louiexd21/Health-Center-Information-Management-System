@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Medicine;
 use App\Models\Category;
 use Livewire\WithPagination;
+use Illuminate\Support\Str;
 
 class Medicines extends Component
 {
@@ -22,7 +23,7 @@ class Medicines extends Component
     public $ageFilter = '';
     public $categoryFilter = '';
     public $archiveMedicineId;
-    public $showArchived = false; // Toggle to show/hide archived items
+    public $showArchived = false;
 
     protected $rules = [
         'medicine_name' => 'required|string|max:255',
@@ -37,6 +38,64 @@ class Medicines extends Component
     protected $messages = [
         'category_id.required' => 'Please select a category.',
     ];
+
+    /**
+     * Check if medicine name (singular or plural) already exists with the same dosage
+     */
+    private function medicineExists($name, $dosage, $excludeId = null)
+    {
+        $name = trim($name);
+        $singular = Str::singular($name);
+        $plural = Str::plural($name);
+
+        $query = Medicine::where('dosage', $dosage)
+            ->where(function($q) use ($name, $singular, $plural) {
+                $q->whereRaw('LOWER(medicine_name) = ?', [strtolower($name)])
+                  ->orWhereRaw('LOWER(medicine_name) = ?', [strtolower($singular)])
+                  ->orWhereRaw('LOWER(medicine_name) = ?', [strtolower($plural)]);
+            });
+
+        if ($excludeId) {
+            $query->where('medicine_id', '!=', $excludeId);
+        }
+
+        return $query->exists();
+    }
+
+    /**
+     * Custom validation for medicine name + dosage combination
+     */
+    private function validateMedicineUniqueness($excludeId = null)
+    {
+        if ($this->medicineExists($this->medicine_name, $this->dosage, $excludeId)) {
+            $singular = Str::singular($this->medicine_name);
+            $plural = Str::plural($this->medicine_name);
+
+            // Check which form exists to give a helpful error message
+            $existingForm = '';
+            if (Medicine::whereRaw('LOWER(medicine_name) = ?', [strtolower($singular)])
+                        ->where('dosage', $this->dosage)
+                        ->when($excludeId, fn($q) => $q->where('medicine_id', '!=', $excludeId))
+                        ->exists()) {
+                $existingForm = $singular;
+            } elseif (Medicine::whereRaw('LOWER(medicine_name) = ?', [strtolower($plural)])
+                              ->where('dosage', $this->dosage)
+                              ->when($excludeId, fn($q) => $q->where('medicine_id', '!=', $excludeId))
+                              ->exists()) {
+                $existingForm = $plural;
+            }
+
+            $message = $existingForm
+                ? "This medicine already exists as '{$existingForm}' with dosage {$this->dosage}"
+                : "This medicine with the same dosage already exists in singular or plural form";
+
+            $this->addError('medicine_name', $message);
+            $this->addError('dosage', 'Duplicate medicine + dosage detected');
+            return false;
+        }
+
+        return true;
+    }
 
     private function convertToMonths($value, $unit)
     {
@@ -111,13 +170,8 @@ class Medicines extends Component
             return;
         }
 
-        $exists = Medicine::where('medicine_name', $this->medicine_name)
-            ->where('dosage', $this->dosage)
-            ->exists();
-
-        if ($exists) {
-            $this->addError('medicine_name', 'This medicine with the same dosage already exists');
-            $this->addError('dosage', 'Duplicate medicine + dosage detected');
+        // Check for duplicate medicine name (singular/plural) + dosage
+        if (!$this->validateMedicineUniqueness()) {
             return;
         }
 
@@ -127,7 +181,7 @@ class Medicines extends Component
         $expiryStatus = $this->determineExpiryStatus($this->expiry_date);
 
         Medicine::create([
-            'medicine_name' => $this->medicine_name,
+            'medicine_name' => trim($this->medicine_name),
             'category_id'   => $this->category_id,
             'dosage'        => $this->dosage,
             'stock'         => $this->stock,
@@ -172,25 +226,19 @@ class Medicines extends Component
             return;
         }
 
-        $stockStatus = $this->determineStockStatus($this->stock);
-        $expiryStatus = $this->determineExpiryStatus($this->expiry_date);
-
-        $exists = Medicine::where('medicine_name', $this->medicine_name)
-            ->where('dosage', $this->dosage)
-            ->where('medicine_id', '!=', $this->edit_id)
-            ->exists();
-
-        if ($exists) {
-            $this->addError('medicine_name', 'This medicine with the same dosage already exists.');
-            $this->addError('dosage', 'Duplicate medicine + dosage detected.');
+        // Check for duplicate medicine name (singular/plural) + dosage, excluding current record
+        if (!$this->validateMedicineUniqueness($this->edit_id)) {
             return;
         }
+
+        $stockStatus = $this->determineStockStatus($this->stock);
+        $expiryStatus = $this->determineExpiryStatus($this->expiry_date);
 
         $min_age_months = $this->convertToMonths($this->min_age_value, $this->min_age_unit);
         $max_age_months = $this->convertToMonths($this->max_age_value, $this->max_age_unit);
 
         Medicine::where('medicine_id', $this->edit_id)->update([
-            'medicine_name'  => $this->medicine_name,
+            'medicine_name'  => trim($this->medicine_name),
             'category_id'    => $this->category_id,
             'dosage'         => $this->dosage,
             'stock'          => $this->stock,
@@ -219,23 +267,20 @@ class Medicines extends Component
         $this->edit_id = '';
     }
 
-    // Archive confirmation
     public function confirmMedicineArchive($id)
     {
         $this->archiveMedicineId = $id;
         $this->dispatch('show-medicine-archive-confirmation');
     }
 
-    // Archive the medicine (soft delete)
     public function archiveMedicine()
     {
         $medicine = Medicine::findOrFail($this->archiveMedicineId);
-        $medicine->delete(); // Uses soft delete if SoftDeletes trait is enabled
+        $medicine->delete();
         $this->dispatch('medicine-archive-success');
         $this->resetPage();
     }
 
-    // Restore archived medicine
     public function restoreMedicine($id)
     {
         Medicine::withTrashed()->findOrFail($id)->restore();
@@ -243,7 +288,6 @@ class Medicines extends Component
         $this->resetPage();
     }
 
-    // Toggle archived view
     public function toggleArchived()
     {
         $this->showArchived = !$this->showArchived;
@@ -279,7 +323,6 @@ class Medicines extends Component
     {
         $query = Medicine::with('category')->search($this->search);
 
-        // Show archived or active medicines
         if ($this->showArchived) {
             $query = $query->onlyTrashed();
         }
