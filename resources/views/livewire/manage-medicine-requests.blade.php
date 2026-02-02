@@ -256,8 +256,7 @@
                             <input wire:model="walkInQuantity"
                                    type="number"
                                    class="form-control @error('walkInQuantity') is-invalid @enderror"
-                                   min="1"
-                                   placeholder="Enter quantity">
+                                   placeholder="Enter quantity" min="1" max="99999" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 2)" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                             @error('walkInQuantity')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror

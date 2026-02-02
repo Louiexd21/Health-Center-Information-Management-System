@@ -258,7 +258,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Stock<span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" name="stock" wire:model="stock">
+                                <input  type="number" class="form-control" name="stock" wire:model="stock" min="0" max="99999" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 5)" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 @error('stock')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -367,7 +367,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Stock<span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" name="stock" wire:model="stock">
+                                <input type="number" class="form-control" name="stock" wire:model="stock" min="0" max="99999" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 5)" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 @error('stock')
                                 <small class="text-danger">{{ $message }}</small>
                                 @enderror
