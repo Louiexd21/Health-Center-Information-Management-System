@@ -10,7 +10,7 @@
             <div class="swiper-slide bg3"></div>
         </div>
     </div>
-
+    {{-- test --}}
     <!-- HERO CONTENT -->
     <div class="hero-content w-100">
         <h1 class="fw-bold text-light mb-5 text-wrap">Bringing Better <br><span class="" style="color: #4CAF50;">Healthcare to the Barangay</span><br> – Digitally</h1>
