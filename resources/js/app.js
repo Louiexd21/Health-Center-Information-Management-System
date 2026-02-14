@@ -12,6 +12,14 @@ window.Swal = Swal;
 import $ from "jquery";
 window.$ = window.jQuery = $;
 
+
+import select2 from 'select2';
+
+// Manually attach it to jQuery
+select2($);
+
+import 'select2/dist/css/select2.min.css';
+
 // Moment.js (required for daterangepicker)
 import moment from "moment";
 window.moment = moment;

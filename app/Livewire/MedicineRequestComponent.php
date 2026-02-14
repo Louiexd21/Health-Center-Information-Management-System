@@ -22,7 +22,7 @@ class MedicineRequestComponent extends Component
     protected $rules = [
         'selectedMedicineId' => 'required|exists:medicines,medicine_id',
         'quantity' => 'required|integer|min:1',
-        'reason' => 'required|string|max:500',
+        'reason' => 'string|max:500',
     ];
 
     public function mount(){

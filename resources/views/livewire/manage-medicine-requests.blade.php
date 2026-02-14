@@ -1,4 +1,5 @@
 <div>
+    
     <main class="d-flex flex-column container-fluid bg-light">
         <h2 class="mb-5 fs-1 text-center">Manage Medicine Requests</h2>
 
@@ -165,7 +166,7 @@
                                                 class="btn btn-sm btn-primary text-nowrap"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#viewDetailsModal">
-                                            <i class="fa-solid fa-eye me-1"></i>View
+                                            <i class="fa-solid fa-eye fa-lg"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -202,35 +203,32 @@
                     <form wire:submit.prevent="createWalkIn">
                         @csrf
 
-                        {{-- User Search & Selection --}}
+                        {{-- User Search & Selection with Select2 --}}
                         <div class="mb-3">
                             <label class="form-label">Search User/Patient <span class="text-danger">*</span></label>
-                            <input wire:model.live.debounce.300ms="userSearch"
-                                   type="search"
-                                   class="form-control mb-2"
-                                   placeholder="Search by name...">
-
-                            <select wire:model="walkInUserId" class="form-select @error('walkInUserId') is-invalid @enderror">
-                                <option value="">Select user/patient</option>
-                                @foreach($users as $user)
-                                    <option value="{{ $user->id }}">
-                                        {{ $user->full_name }}
-                                        @if($user->patient)
-                                            <span class="text-success">✓ Has Patient Record</span>
-                                        @endif
-                                        @if($user->patient_type)
-                                            - {{ $user->patient_type }}
-                                        @endif
-                                    </option>
-                                @endforeach
-                            </select>
+                            
+                            <div wire:ignore>
+                                <select id="userSelect" 
+                                        class="form-control user-search @error('walkInUserId') is-invalid @enderror"
+                                        style="width: 100%;">
+                                    <option value="">Select user/patient</option>
+                                    @foreach($users as $user)
+                                        <option value="{{ $user->id }}">
+                                            {{ $user->full_name }}
+                                            @if($user->patient)
+                                                ✓ Has Patient Record
+                                            @endif
+                                            @if($user->patient_type)
+                                                - {{ $user->patient_type }}
+                                            @endif
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            
                             @error('walkInUserId')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
-                            <small class="text-muted mt-1 d-block">
-                                <i class="fa-solid fa-info-circle me-1"></i>
-                                The system will automatically use their patient record if available, otherwise their user account.
-                            </small>
                         </div>
 
                         {{-- Medicine Selection --}}
@@ -265,7 +263,7 @@
 
                         {{-- Reason --}}
                         <div class="mb-3">
-                            <label class="form-label">Reason <span class="text-danger">*</span></label>
+                            <label class="form-label">Reason</label>
                             <textarea wire:model="walkInReason"
                                     class="form-control @error('walkInReason') is-invalid @enderror"
                                       rows="3"
@@ -476,18 +474,4 @@
             </div>
         </div>
     </div>
-
-    @push('scripts')
-    <script>
-        // Close walk-in modal after successful submission
-        document.addEventListener('livewire:init', () => {
-            Livewire.on('close-walkin-modal', () => {
-                const modal = bootstrap.Modal.getInstance(document.getElementById('walkInModal'));
-                if (modal) {
-                    modal.hide();
-                }
-            });
-        });
-    </script>
-    @endpush
 </div>

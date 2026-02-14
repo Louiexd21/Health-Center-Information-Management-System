@@ -184,11 +184,11 @@
                                 <div class="d-flex gap-1 justify-content-center">
                                     @if($showArchived)
                                         <button class="btn btn-info text-white" wire:click="restoreMedicine({{ $medicine->medicine_id }})">
-                                            <i class="fa-solid fa-rotate-left me-1"></i>Restore
+                                            <i class="fa-solid fa-rotate-left fa-lg"></i>
                                         </button>
                                     @else
                                         <button class="btn bg-primary text-white text-nowrap" wire:click="editMedicineData({{ $medicine->medicine_id }})">
-                                            <i class="fa-solid fa-pen-to-square me-1"></i>Edit
+                                            <i class="fa-solid fa-pen-to-square fa-lg"></i>
                                         </button>
                                         <button class="btn p-0" wire:click="confirmMedicineArchive({{ $medicine->medicine_id }})">
                                              <i class="fa-solid fa-trash text-danger fs-3"></i>

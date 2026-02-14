@@ -5,9 +5,11 @@ window.addEventListener('medicineRequest-added', event => {
         icon: "success",
         showConfirmButton: false,
         timer:1500
-    })
-    window.location.reload();
+    });
 
+    setTimeout(() => {
+        window.location.reload();
+    }, 1000);
 });
 
 

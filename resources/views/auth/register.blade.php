@@ -243,7 +243,7 @@
                         <h3>4. Medical Information Disclaimer</h3>
                         <p>The Health Center Information Management System provides:</p>
                         <ul>
-                            <li>Record-keeping and appointment management services</li>
+                            <li>Record-keeping</li>
                             <li>Information that should not replace professional medical advice</li>
                             <li>Services that complement but do not substitute for in-person medical consultations</li>
                         </ul>

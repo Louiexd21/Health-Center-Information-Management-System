@@ -62,12 +62,12 @@
                             <td>
                                 <div class="d-flex gap-1 justify-content-center">
                                     @if($showArchived)
-                                        <button class="btn btn-danger text-white" wire:click="restoreCategory({{ $category->category_id }})">
-                                            <i class="fa-solid fa-rotate-left me-1"></i>Restore
+                                        <button class="btn btn-info text-white" wire:click="restoreCategory({{ $category->category_id }})">
+                                            <i class="fa-solid fa-rotate-left fa-lg"></i>
                                         </button>
                                     @else
                                         <button class="btn bg-primary text-white" wire:click="editCategoryData({{ $category->category_id }})">
-                                            <i class="fa-solid fa-pen-to-square me-1"></i>Edit
+                                            <i class="fa-solid fa-pen-to-square fa-lg"></i>
                                         </button>
                                         <button class="btn p-0" wire:click="confirmArchive({{ $category->category_id }})">
                                             <i class="fa-solid fa-trash text-danger fs-3"></i>
@@ -76,7 +76,7 @@
                                 </div>
                             </td>
                         </tr>
-                    @endforeachP
+                    @endforeach
                         <!-- dynamic td -->
                     </tbody>
                 </table>

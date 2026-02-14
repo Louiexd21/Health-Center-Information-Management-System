@@ -168,7 +168,7 @@
 
                         {{-- Reason --}}
                         <div class="mb-3">
-                            <label class="form-label">Reason for Request <span class="text-danger">*</span></label>
+                            <label class="form-label">Reason for Request</label>
                             <textarea wire:model="reason"
                                       class="form-control @error('reason') is-invalid @enderror"
                                       rows="3"

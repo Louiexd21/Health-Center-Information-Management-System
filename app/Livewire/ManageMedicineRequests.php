@@ -37,7 +37,14 @@ class ManageMedicineRequests extends Component
         'walkInUserId' => 'required|exists:users,id',
         'walkInMedicineId' => 'required|exists:medicines,medicine_id',
         'walkInQuantity' => 'required|integer|min:1',
-        'walkInReason' => 'required|string|max:500',
+        'walkInReason' => 'nullable|string|max:500',
+    ];
+
+    protected $messages = [
+        'walkInUserId.required' => 'Please select a user/patient.',
+        'walkInMedicineId.required' => 'Please select a medicine.',
+        'walkInQuantity.required' => 'Please enter a quantity.',
+        'walkInQuantity.min' => 'Quantity must be at least 1.',
     ];
 
     public function mount()
@@ -64,6 +71,7 @@ class ManageMedicineRequests extends Component
 
     public function updatedUserSearch()
     {
+        $this->reset('walkInUserId');   
         $this->loadUsers();
     }
 
@@ -81,15 +89,20 @@ class ManageMedicineRequests extends Component
 
     public function createWalkIn()
     {
+        // First validate the basic rules
         $this->validate();
+
+        // Then validate stock availability
+        if (!$this->validateWalkInStock()) {
+            return; // Validation failed, error already added
+        }
 
         DB::transaction(function () {
             $medicine = Medicine::lockForUpdate()->findOrFail($this->walkInMedicineId);
 
-            // Check if sufficient stock
+            // Double-check stock inside transaction (race condition protection)
             if ($medicine->stock < $this->walkInQuantity) {
-                session()->flash('error', 'Insufficient medicine stock.');
-                return;
+                throw new \Exception("Insufficient medicine stock. Only {$medicine->stock} available.");
             }
 
             // Get the user
@@ -145,6 +158,27 @@ class ManageMedicineRequests extends Component
         $this->resetWalkInForm();
         $this->dispatch('close-walkin-modal');
         session()->flash('message', 'Walk-in medicine dispensed successfully.');
+    }
+
+    /**
+     * Validate that the requested quantity doesn't exceed available stock
+     */
+    protected function validateWalkInStock()
+    {
+        if ($this->walkInMedicineId && $this->walkInQuantity) {
+            $medicine = Medicine::find($this->walkInMedicineId);
+            
+            if (!$medicine) {
+                $this->addError('walkInMedicineId', 'Selected medicine not found.');
+                return false;
+            }
+            
+            if ($this->walkInQuantity > $medicine->stock) {
+                $this->addError('walkInQuantity', "Quantity exceeds available stock ({$medicine->stock} available).");
+                return false;
+            }
+        }
+        return true;
     }
 
     public function resetWalkInForm()
